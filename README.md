@@ -34,8 +34,8 @@ vars:
           - "user3"
           - "user4"
 ```
-Change users list, ansible_user, ansible_become_pass, endpoint dns to fit your needs.
-If installing on Raspberry Pir non amd64 system, change arch as well.
+Change users list, ansible_user, ansible_become_pass, endpoint, and dns to fit your needs.
+If installing on Raspberry Pi or any non amd64 system, change arch as well.
 armhf - 32-bt Raspberry Pi
 arm64 - 64-bit Rasbperry Pi
 
