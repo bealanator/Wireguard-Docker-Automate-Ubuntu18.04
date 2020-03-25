@@ -37,8 +37,8 @@ vars:
 Change users list, ansible_user, ansible_become_pass, endpoint, and dns to fit your needs.
 If installing on Raspberry Pi or any non amd64 system, change arch as well.
 
-armhf - 32-bit Raspberry Pi
-arm64 - 64-bit Rasbperry Pi
+- armhf: 32-bit Raspberry Pi
+- arm64: 64-bit Rasbperry Pi
 
 Next, edit hosts:
 ```yaml
