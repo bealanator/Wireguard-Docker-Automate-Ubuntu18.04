@@ -10,6 +10,7 @@ Ubuntu 18.04 server with the following:
 - SSH Keys configured for your user
   - Or sshpass installed if not using keys
 - User added to sudoers
+- Ansible installed on a remote or local machine.
 
 ## Installation
 Clone/download repo, cd into the directory. Edit wireguard_docker_deploy.yml
