@@ -1,0 +1,20 @@
+- hosts: all
+  #connection: local
+  become: yes
+  vars:
+    ansible_user: "user"
+    #uncomment and install sshpass if not using SSH keys
+    #ansible_password: "asdfasdf"
+    ansible_become_pass: "sudo_password"
+  roles:
+    - role: "{{ playbook_dir }}"
+      vars:
+        endpoint: "server_ip"
+        dns: "desired_client_dns"
+        listen_port: 51820
+        arch: "amd64"
+        users:
+          - "user1"
+          - "user2"
+          - "user3"
+          - "user4"

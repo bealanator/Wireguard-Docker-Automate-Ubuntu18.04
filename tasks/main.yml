@@ -1,0 +1,209 @@
+- name: "Add wireguard repo"
+  apt_repository:
+    repo: ppa:wireguard/wireguard
+
+- name: "Install wireguard pre-reqs"  
+  apt:
+    pkg:
+      - linux-headers-generic
+      - wireguard
+
+- name: "Install Docker Pre-Reqs"
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates 
+      - curl 
+      - software-properties-common
+      - qrencode
+
+- name: "Adding Docker GPG Key"
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -"
+  args:
+    warn: false
+
+- name: "Adding Docker repo"
+  apt_repository:
+    repo: deb [arch={{ arch }}] https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: "Installing Docker"
+  apt:
+    pkg:
+      - docker-ce
+
+- name: "Create wireguard directory"
+  file:
+    path: /opt/wireguard
+    state: directory
+    mode: '0755'
+- name: "Create keystores directory"
+  file:
+    path: /opt/wireguard/wireguard_keystore
+    state: directory
+    mode: '0755'
+- name: "Create config directory"
+  file: 
+    path: /opt/wireguard/conf_dir
+    state: directory
+    mode: '0755'
+- name: "Create firewall directory"
+  file:
+    path: /opt/firewall
+    state: directory
+    mode: '0755'
+- name: "Create units directory"
+  file:
+    path: /opt/units
+    state: directory
+    mode: '0755'
+
+- name: "Copy docker file"
+  copy:
+    src: "{{ playbook_dir }}/files/Dockerfile"
+    dest: "/opt/wireguard/Dockerfile"
+    owner: root
+    group: root
+    mode: '0755'
+- name: "Copy build script"
+  copy: 
+    src: "{{ playbook_dir }}/files/build_image.sh"
+    dest: "/opt/wireguard/build_image.sh"
+    owner: root
+    group: root
+    mode: '0775'
+
+- name: "Copy client config script"
+  copy:
+    src: "{{ playbook_dir }}/files/client_conf.sh"
+    dest: "/opt/wireguard/client_conf.sh"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy docker daemon.json"
+  copy:
+    src: "{{ playbook_dir }}/files/daemon.json"
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: '0755'
+- name: "Copy fw_restore script"
+  copy:
+    src: "{{ playbook_dir }}/files/fw_restore.sh"
+    dest: "/opt/firewall/fw_restore.sh"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy wireguard key gen script"
+  copy:
+    src: "{{ playbook_dir }}/files/gen_keys.sh"
+    dest: "/opt/wireguard/gen_keys.sh"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy ipv6 gen script"
+  copy:
+    src: "{{ playbook_dir }}/files/ipv6_gen.py"
+    dest: "/opt/wireguard/ipv6_gen.py"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy qr gen scipt"
+  copy:
+    src: "{{ playbook_dir }}/files/qr_gen.sh"
+    dest: "/opt/wireguard/qr_gen.sh"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy server conf script"
+  copy:
+    src: "{{ playbook_dir }}/files/server_conf.sh"
+    dest: "/opt/wireguard/server_conf.sh"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy docker start script"
+  copy:
+    src: "{{ playbook_dir }}/files/start.sh"
+    dest: "/opt/wireguard/start.sh"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy ipv4 firewall rules"
+  copy:
+    src: "{{ playbook_dir }}/files/v4.rules"
+    dest: "/opt/firewall/v4.rules"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy ipv6 firewall fules"
+  copy:
+    src: "{{ playbook_dir }}/files/v6.rules"
+    dest: "/opt/firewall/v6.rules"
+    owner: root
+    group: root
+    mode: '0775'
+- name: "Copy wireguard start script"
+  copy:
+    src: "{{ playbook_dir }}/files/wg_start.sh"
+    dest: "/opt/wireguard/wg_start.sh"
+    owner: root
+    group: root
+    mode: '0755'
+- name: "Copy docker start unit"
+  copy:
+    src: "{{ playbook_dir }}/files/wg_docker_start.service"
+    dest: "/opt/units/wg_docker_start.service"
+    owner: root
+    group: root
+    mode: '0755'
+- name: "Copy firewall persistence unit"
+  copy:
+    src: "{{ playbook_dir }}/files/fw_restore.service"
+    dest: "/opt/units/fw_restore.service"
+    owner: root
+    group: root
+    mode: '0755'
+- name: "Copy qr gen to path"
+  copy:
+    src: "{{ playbook_dir }}/files/qr_gen.sh"
+    dest: "/bin/wireguard-qrgen"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Enable docker service"
+  shell: "systemctl enable docker"
+- name: "Enable firewall restore service"
+  shell: "systemctl enable /opt/units/fw_restore.service"
+- name: "Enable start firewall rules restore"
+  shell: "systemctl start fw_restore.service"
+- name: "Enable wireguard container start service"
+  shell: "systemctl enable /opt/units/wg_docker_start.service"
+
+- name: "Restart docker service"
+  systemd:
+    state: restarted
+    name: docker
+
+- name: "Build Docker image"
+  shell: "/opt/wireguard/build_image.sh"
+
+- name: "Gen server keys"
+  shell: "/opt/wireguard/gen_keys.sh server"
+
+- name: "Gen server config"
+  shell: "/opt/wireguard/server_conf.sh {{ listen_port }}"
+
+- name: "Gen client keys"
+  shell: "/opt/wireguard/gen_keys.sh {{ item }}"
+  with_items:
+    - "{{ users }}"
+
+- name: "Gen client configs"
+  shell: "/opt/wireguard/client_conf.sh {{ item }} {{ endpoint }} {{ listen_port }} {{ dns }}"
+  with_items:
+    - "{{ users }}"
+
+- name: "Start Docker container"
+  shell: "/opt/wireguard/start.sh"

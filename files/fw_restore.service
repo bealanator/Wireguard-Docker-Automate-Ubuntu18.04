@@ -1,0 +1,10 @@
+[Unit]
+Description=Restore firewall rules
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/firewall/fw_restore.sh
+
+[Install]
+WantedBy=multi-user.target

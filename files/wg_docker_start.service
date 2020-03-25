@@ -1,0 +1,10 @@
+[Unit]
+Description=Start Wireguard container
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/docker/wireguard/start.sh
+
+[Install]
+WantedBy=multi-user.target
