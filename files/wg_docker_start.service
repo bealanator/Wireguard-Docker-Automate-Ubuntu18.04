@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/opt/docker/wireguard/start.sh
+ExecStart=/opt/wireguard/start.sh
 
 [Install]
 WantedBy=multi-user.target
