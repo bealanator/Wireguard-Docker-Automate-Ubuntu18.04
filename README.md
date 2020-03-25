@@ -10,7 +10,8 @@ Ubuntu 18.04 server with the following:
 - SSH Keys configured for your user
   - Or sshpass installed if not using keys
 - User added to sudoers
-- Ansible installed on a remote or local machine.
+
+Ansible will also need installed on a remote or local machine. It can also be installed on the target Ubuntu 18.04 server if installing to itself.
 
 ## Installation
 Clone/download repo, cd into the directory. Edit wireguard_docker_deploy.yml
