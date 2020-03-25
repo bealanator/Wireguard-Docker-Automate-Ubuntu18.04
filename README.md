@@ -72,9 +72,11 @@ Simply run the following (as root) to upgrade Wireguard and other packages in th
 
 ```bash
 sudo docker stop $( sudo docker ps -q )
+# Skip the next command if you have other Docker containers on your system
+# as it will remove the non-wireguard ones as well.
 sudo docker rm $( sudo docker ps -a -q )
 sudo /opt/wireguard/build_image.sh
 sudo /opt/wireguard/start.sh
 ```
 
-This will stop the running container, remove any remnant containers, and re-build the image (without using the cache) and will then restart the container.
+This will stop the running container, remove all containers, and re-build the image (without using the cache) and will then restart the container.
