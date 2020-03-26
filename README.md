@@ -1,6 +1,6 @@
 # Wireguard-Docker-Automate-Ubuntu18.04
 
-Ansible playbook to install Wireguard inside a Docker container on Ubuntu 18.04 with full IPv4/IPv6 support and firewall configured to only allow icmp (IPv4 & IPv6), 51820/udp (wireguard port) and 22/tcp (IPv4 only).
+Ansible playbook to install Wireguard inside a Docker container on Ubuntu 18.04 with full IPv4/IPv6 support and host firewall configured to only allow icmp (IPv4 & IPv6), 51820/udp (wireguard port) and 22/tcp (IPv4 only).
 
 ## Pre-Requesites
 
