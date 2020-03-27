@@ -87,10 +87,10 @@
     owner: root
     group: root
     mode: '0755'
-- name: "Copy fw_restore script"
+- name: "Copy wg_fw_restore script"
   copy:
-    src: "{{ playbook_dir }}/files/fw_restore.sh"
-    dest: "/opt/firewall/fw_restore.sh"
+    src: "{{ playbook_dir }}/files/wg_fw_restore.sh"
+    dest: "/opt/firewall/wg_fw_restore.sh"
     owner: root
     group: root
     mode: '0775'
@@ -129,20 +129,6 @@
     owner: root
     group: root
     mode: '0775'
-- name: "Copy ipv4 firewall rules"
-  copy:
-    src: "{{ playbook_dir }}/files/v4.rules"
-    dest: "/opt/firewall/v4.rules"
-    owner: root
-    group: root
-    mode: '0775'
-- name: "Copy ipv6 firewall fules"
-  copy:
-    src: "{{ playbook_dir }}/files/v6.rules"
-    dest: "/opt/firewall/v6.rules"
-    owner: root
-    group: root
-    mode: '0775'
 - name: "Copy wireguard start script"
   copy:
     src: "{{ playbook_dir }}/files/wg_start.sh"
@@ -152,8 +138,8 @@
     mode: '0755'
 - name: "Copy firewall persistence unit"
   copy:
-    src: "{{ playbook_dir }}/files/fw_restore.service"
-    dest: "/opt/units/fw_restore.service"
+    src: "{{ playbook_dir }}/files/wg_fw_restore.service"
+    dest: "/opt/units/wg_fw_restore.service"
     owner: root
     group: root
     mode: '0755'
@@ -166,9 +152,9 @@
     mode: '0755'
 
 - name: "Enable firewall restore service"
-  shell: "systemctl enable /opt/units/fw_restore.service"
-- name: "Enable start firewall rules restore"
-  shell: "systemctl start fw_restore.service"
+  shell: "systemctl enable /opt/units/wg_fw_restore.service"
+- name: "Start wireguard firewall rules"
+  shell: "systemctl start wg_fw_restore.service"
 
 - name: "Restart docker service"
   systemd:
