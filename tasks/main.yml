@@ -150,13 +150,6 @@
     owner: root
     group: root
     mode: '0755'
-- name: "Copy docker start unit"
-  copy:
-    src: "{{ playbook_dir }}/files/wg_docker_start.service"
-    dest: "/opt/units/wg_docker_start.service"
-    owner: root
-    group: root
-    mode: '0755'
 - name: "Copy firewall persistence unit"
   copy:
     src: "{{ playbook_dir }}/files/fw_restore.service"
@@ -172,14 +165,10 @@
     group: root
     mode: '0755'
 
-- name: "Enable docker service"
-  shell: "systemctl enable docker"
 - name: "Enable firewall restore service"
   shell: "systemctl enable /opt/units/fw_restore.service"
 - name: "Enable start firewall rules restore"
   shell: "systemctl start fw_restore.service"
-- name: "Enable wireguard container start service"
-  shell: "systemctl enable /opt/units/wg_docker_start.service"
 
 - name: "Restart docker service"
   systemd:
