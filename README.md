@@ -58,7 +58,8 @@ ansible-playbook -i hosts wireguard_docker_deploy.yml
 ```
 
 ## Client configuration
-All client configs are stored in /opt/wireguard/wireguard_keystore in a folder corresponding with the usernames specified in wireguard_docker_deploy.yml.
+All client configs are stored in /opt/wireguard/wireguard_keystore in a folder corresponding with the usernames specified 
+in wireguard_docker_deploy.yml.
 
 The configs can be copied & used as is, or for smartphones or any Wireguard app that can read qr codes, run the following from anywhere:
 
@@ -74,12 +75,11 @@ In the /opt/wireguard there is a script called build_image.sh
 Simply run the following (as root) to upgrade Wireguard and other packages in the container:
 
 ```bash
-sudo docker stop $( sudo docker ps -q )
-# Skip the next command if you have other Docker containers on your system
-# as it will remove the non-wireguard ones as well.
-sudo docker rm $( sudo docker ps -a -q )
+sudo docker stop wireguard
+sudo docker rm wireguard
 sudo /opt/wireguard/build_image.sh
 sudo /opt/wireguard/start.sh
 ```
 
-This will stop the running container, remove all containers, and re-build the image (without using the cache) and will then restart the container.
+This will stop the running wireguard container, remove the container, and re-build the image (without using the cache) 
+and will then restart the container.
