@@ -1,6 +1,6 @@
 [slave]
 # Change to your IP. Set to localhost if installing on local machine
-10.10.10.10
+155.138.235.242
 
 [slave:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'

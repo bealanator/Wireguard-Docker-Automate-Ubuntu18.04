@@ -1,16 +1,16 @@
 - hosts: all
   #connection: local
-  become: yes
+  #become: yes
   vars:
-    ansible_user: "user"
+    ansible_user: "root"
     #uncomment and install sshpass if not using SSH keys
     #ansible_password: "ssh_password"
-    ansible_become_pass: "sudo_password"
+    #ansible_become_pass: "sudo_password"
   roles:
     - role: "{{ playbook_dir }}"
       vars:
-        endpoint: "server_ip_or_hostname"
-        dns: "desired_client_dns"
+        endpoint: "155.138.235.242"
+        dns: "9.9.9.9"
         listen_port: 51820
         arch: "amd64"
         users:
