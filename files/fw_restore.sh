@@ -15,4 +15,3 @@ ip6tables -A INPUT -p ipv6-icmp -j ACCEPT
 ip6tables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 ip6tables -A INPUT -p udp --dport 51820 -j ACCEPT
 
-ip6tables -t nat -A POSTROUTING -s fdd6:89cb:ea4c:32e5::/64 ! -o docker0 -j MASQUERADE
