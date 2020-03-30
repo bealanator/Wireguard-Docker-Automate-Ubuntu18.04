@@ -80,16 +80,16 @@
     owner: root
     group: root
     mode: '0775'
-- name: "Copy docker daemon.json"
-  copy:
-    src: "{{ playbook_dir }}/files/daemon.json"
-    dest: "/etc/docker/daemon.json"
-    owner: root
-    group: root
-    mode: '0755'
+#- name: "Copy docker daemon.json"
+#  copy:
+#    src: "{{ playbook_dir }}/files/daemon.json"
+#    dest: "/etc/docker/daemon.json"
+#    owner: root
+#    group: root
+#    mode: '0755'
 - name: "Copy fw_restore script"
-  copy:
-    src: "{{ playbook_dir }}/files/fw_restore.sh"
+  template:
+    src: "fw_restore.sh.j2"
     dest: "/opt/firewall/fw_restore.sh"
     owner: root
     group: root
@@ -123,8 +123,8 @@
     group: root
     mode: '0775'
 - name: "Copy docker start script"
-  copy:
-    src: "{{ playbook_dir }}/files/start.sh"
+  template:
+    src: "start.sh.j2"
     dest: "/opt/wireguard/start.sh"
     owner: root
     group: root
@@ -160,6 +160,10 @@
   systemd:
     state: restarted
     name: docker
+
+- name: "Create docker network"
+  shell: "docker network create --ipv6 --subnet {{ private_ipv4_network }}/{{ private_ipv4_netmask }} --subnet {{ server_ipv6_prefix }}::ffff/{{ docker_ipv6_net_cidr }} wireguard-net"
+
 
 - name: "Build Docker image"
   shell: "/opt/wireguard/build_image.sh"

@@ -1,17 +1,30 @@
 - hosts: all
+  # Uncomment if installing locally
   #connection: local
   become: yes
   vars:
     ansible_user: "user"
     #uncomment and install sshpass if not using SSH keys
-    ansible_password: "ssh_password"
+    #ansible_password: "ssh_password"
     ansible_become_pass: "sudo_password"
   roles:
     - role: "{{ playbook_dir }}"
       vars:
+        # Surround in [] if using IPv6 address.
+        # Example: [2000:1234::33]
         endpoint: "server_ip_or_hostname"
+        # First usable will be taken for docker network
+        private_ipv4_network: "192.168.254.0"
+        private_ipv4_wireguard_address: "192.168.254.2"
+        private_ipv4_netmask: "24"
+        server_ipv6_prefix: "2000::XXXX"
+        docker_ipv6_net_cidr: "124"
+        wireguard_ipv6: "2000::XXX2"
         dns: "desired_client_dns"
         listen_port: 51820
+        # Change based on what your Ubuntu install shows
+        # from `ip a`
+        network_dev: "ens3"
         arch: "amd64"
         users:
           - "user1"
