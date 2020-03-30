@@ -1,8 +1,8 @@
 # Wireguard-Docker-Automate-Ubuntu18.04
 
 Ansible playbook to install Wireguard inside a Docker container onto a fresh Ubuntu 18.04 server.
-Features full IPv4/IPv6 support and host firewall will be configured to allow 51820/udp (wireguard port),
-22/tcp, icmp (IPv4 & IPv6).
+Features full IPv4/IPv6 support and host firewall will be configured to allow 22/tcp, icmp (IPv4 & IPv6). 
+All other incoming traffic will be dropped.
 
 ## Pre-Requesites
 
@@ -19,17 +19,29 @@ Ansible will also need installed on a remote or local machine. It can also be in
 ## Installation
 Clone/download repo, cd into the directory. Edit wireguard_docker_deploy.yml
 ```yaml
-vars:
+  vars:
     ansible_user: "user"
     #uncomment and install sshpass if not using SSH keys
-    #ansible_password: "asdfasdf"
+    #ansible_password: "ssh_password"
     ansible_become_pass: "sudo_password"
   roles:
     - role: "{{ playbook_dir }}"
       vars:
-        endpoint: "server_ip"
+        # Surround in [] if using IPv6 address.
+        # Example: [2000:1234::33]
+        endpoint: "server_ip_or_hostname"
+        # First usable will be taken for docker network
+        private_ipv4_network: "192.168.254.0"
+        private_ipv4_wireguard_address: "192.168.254.2"
+        private_ipv4_netmask: "24"
+        server_ipv6_prefix: "2000::XXXX"
+        docker_ipv6_net_cidr: "124"
+        wireguard_ipv6: "2000::XXX2"
         dns: "desired_client_dns"
         listen_port: 51820
+        # Change based on what your Ubuntu install shows
+        # from `ip a`
+        network_dev: "ens3"
         arch: "amd64"
         users:
           - "user1"
@@ -37,7 +49,7 @@ vars:
           - "user3"
           - "user4"
 ```
-Change users list, ansible_user, ansible_become_pass, endpoint, and dns to fit your needs.
+Change users list, ansible_user, ansible_become_pass, endpoint, and dns, server_ipv6_prefix, wireguard_ipv6 to fit your needs.
 If installing on Raspberry Pi or any non amd64 system, change arch as well.
 
 - armhf: 32-bit Raspberry Pi
@@ -45,7 +57,7 @@ If installing on Raspberry Pi or any non amd64 system, change arch as well.
 
 Next, edit hosts:
 ```yaml
-[slave]
+[wireguard]
 # Change to your IP. Set to localhost if installing on local machine
 10.10.10.10
 ```
