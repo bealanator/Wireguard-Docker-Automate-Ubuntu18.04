@@ -162,7 +162,7 @@
     name: docker
 
 - name: "Create docker network"
-  shell: "docker network create --ipv6 --subnet {{ private_ipv4_network }}/{{ private_ipv4_netmask }} --subnet {{ server_ipv6_prefix }}::ffff/{{ docker_ipv6_net_cidr }} wireguard-net"
+  shell: "docker network create --ipv6 --subnet {{ private_ipv4_network }}/{{ private_ipv4_netmask }} --subnet {{ server_ipv6_prefix }}/{{ docker_ipv6_net_cidr }} wireguard-net"
 
 
 - name: "Build Docker image"

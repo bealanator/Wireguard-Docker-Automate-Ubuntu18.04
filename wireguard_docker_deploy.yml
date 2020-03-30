@@ -17,9 +17,12 @@
         private_ipv4_network: "192.168.254.0"
         private_ipv4_wireguard_address: "192.168.254.2"
         private_ipv4_netmask: "24"
-        server_ipv6_prefix: "2000::XXXX"
+        # Adding ffff to the prefix to help avoid conflict with
+        # routers, etc. since the Docker network will take 
+        # sipv6_prefix:ffff::1 for itself
+        server_ipv6_prefix: "ipv6_prefix:ffff::"
         docker_ipv6_net_cidr: "124"
-        wireguard_ipv6: "2000::XXX2"
+        wireguard_ipv6: "ipv6_prefix:ffff::2"
         dns: "desired_client_dns"
         listen_port: 51820
         # Change based on what your Ubuntu install shows
