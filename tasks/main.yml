@@ -74,8 +74,8 @@
     mode: '0775'
 
 - name: "Copy client config script"
-  copy:
-    src: "{{ playbook_dir }}/files/client_conf.sh"
+  template:
+    src: "client_conf.sh.j2"
     dest: "/opt/wireguard/client_conf.sh"
     owner: root
     group: root
@@ -116,8 +116,8 @@
     group: root
     mode: '0775'
 - name: "Copy server conf script"
-  copy:
-    src: "{{ playbook_dir }}/files/server_conf.sh"
+  template:
+    src: "server_conf.sh.j2"
     dest: "/opt/wireguard/server_conf.sh"
     owner: root
     group: root
@@ -163,7 +163,11 @@
 
 - name: "Create docker network"
   shell: "docker network create --ipv6 --subnet {{ private_ipv4_network }}/{{ private_ipv4_netmask }} --subnet {{ server_ipv6_prefix }}/{{ docker_ipv6_net_cidr }} wireguard-net"
+  when: enable_ipv6 is defined
 
+- name: "Create Docker network IPv4 only"
+  shell: "docker network create --subnet {{ private_ipv4_network }}/{{ private_ipv4_netmask }} wireguard-net"
+  when: enable_ipv6 is not defined
 
 - name: "Build Docker image"
   shell: "/opt/wireguard/build_image.sh"
