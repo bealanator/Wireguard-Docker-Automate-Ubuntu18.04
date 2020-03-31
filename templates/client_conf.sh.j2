@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+user=$1
+endpoint=$2
+listen_port=$3
+dns=$4
+
+keystore_path="/opt/wireguard/wireguard_keystore"
+
+peer_count=$( grep -i peer /opt/wireguard/conf_dir/wg0.conf | wc -l )
+peer_count=$(( peer_count + 2 ))
+allowed_ipv6=$( python3 /opt/wireguard/ipv6_gen.py "$peer_count" )
+allowed_ipv4=$(( peer_count ))
+
+# Add client to wireguard config
+printf "\n[Peer]
+PublicKey = $( cat $keystore_path/$user/publickey )
+PresharedKey = $( cat $keystore_path/$user/preshared )
+AllowedIPs = 10.254.254.$allowed_ipv4/32{% if enable_ipv6 is defined %}, fdbd:ff5e:07a2:ff9c::$allowed_ipv6/128{% endif %}\n" >> /opt/wireguard/conf_dir/wg0.conf
+
+# Gen client conf
+printf "[Interface]
+Address = 10.254.254.$allowed_ipv4/24, fdbd:ff5e:07a2:ff9c::$allowed_ipv6/64
+PrivateKey = $( cat $keystore_path/$user/privatekey )
+DNS = $dns
+
+[Peer]
+PublicKey = $( cat $keystore_path/server/publickey )
+PresharedKey = $( cat $keystore_path/$user/preshared )
+AllowedIPs = {% if exclude_private_addresses is defined %} {{ private_ipv4_network }}/{{ private_ipv4_netmask }}, 0.0.0.0/5, 8.0.0.0/7, 10.0.3.0/24, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3, 64.0.0.0/2, 128.0.0.0/3, 160.0.0.0/5, 168.0.0.0/6, 172.0.0.0/12, 172.32.0.0/11, 172.64.0.0/10, 172.128.0.0/9, 173.0.0.0/8, 174.0.0.0/7, 176.0.0.0/4, 192.0.0.0/9, 192.128.0.0/11, 192.160.0.0/13, 192.169.0.0/16, 192.170.0.0/15, 192.172.0.0/14, 192.176.0.0/12, 192.192.0.0/10, 193.0.0.0/8, 194.0.0.0/7, 196.0.0.0/6, 200.0.0.0/5, 208.0.0.0/4, ::/0{% else %} 0.0.0.0/0, ::/0 {% endif %}
+\nEndpoint = $endpoint:$listen_port\n" > $keystore_path/$user/$user.conf
+

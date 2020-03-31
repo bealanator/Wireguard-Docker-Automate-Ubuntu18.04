@@ -20,10 +20,18 @@
         # Adding ffff to the prefix to help avoid conflict with
         # routers, etc. since the Docker network will take 
         # sipv6_prefix:ffff::1 for itself
+        # Comment out enable_ipv6 for ipv4 only hosts.
+        # server_ipv6_prefix, net_cidr, & wireguard_ipv6
+        # will be ignored.
+        enable_ipv6: yes
         server_ipv6_prefix: "ipv6_prefix:ffff::"
         docker_ipv6_net_cidr: "124"
         wireguard_ipv6: "ipv6_prefix:ffff::2"
         dns: "desired_client_dns"
+        # Exclude private IPs (except Docker network)
+        # From going through the tunnel. Comment this line out
+        # To force ALL traffic through Wireguard tunnel.
+        exclude_private_addresses: yes
         listen_port: 51820
         # Change based on what your Ubuntu install shows
         # from `ip a`

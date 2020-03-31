@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker run --network wireguard-net --detach --sysctl net.ipv6.conf.all.disable_ipv6=0 --sysctl net.ipv6.conf.all.forwarding=1 -v /opt/wireguard/conf_dir:/etc/wireguard --cap-add net_admin --cap-add sys_module --restart=always --ip="{{ private_ipv4_wireguard_address }}" --ip6="{{ wireguard_ipv6 }}" --publish {{ listen_port }}:{{ listen_port }}/udp --name wireguard wireguard
+docker run --network wireguard-net --detach --sysctl net.ipv6.conf.all.disable_ipv6=0 --sysctl net.ipv6.conf.all.forwarding=1 -v /opt/wireguard/conf_dir:/etc/wireguard --cap-add net_admin --cap-add sys_module --restart=always --ip="{{ private_ipv4_wireguard_address }}" {% if enable_ipv6 is defined %} --ip6="{{ wireguard_ipv6 }}" {% endif %} --publish {{ listen_port }}:{{ listen_port }}/udp --name wireguard wireguard
