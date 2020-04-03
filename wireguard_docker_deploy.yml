@@ -23,6 +23,7 @@
         # Comment out enable_ipv6 for ipv4 only hosts.
         # server_ipv6_prefix, net_cidr, & wireguard_ipv6
         # will be ignored.
+        # Comment out enable_ipv6 to disable IPv6
         enable_ipv6: yes
         server_ipv6_prefix: "ipv6_prefix:ffff::"
         docker_ipv6_net_cidr: "124"
