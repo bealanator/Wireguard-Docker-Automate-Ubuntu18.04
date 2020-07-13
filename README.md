@@ -72,6 +72,8 @@ Run the following (inside the cloned/downloaded directory):
 ansible-playbook -i hosts wireguard_docker_deploy.yml
 ```
 
+Reboot the server after running the Ansible playbook.
+
 ## Client configuration
 All client configs are stored in /opt/wireguard/wireguard_keystore in a folder corresponding with the usernames specified 
 in wireguard_docker_deploy.yml.
