@@ -29,10 +29,6 @@
         docker_ipv6_net_cidr: "124"
         wireguard_ipv6: "ipv6_prefix:ffff::2"
         dns: "desired_client_dns"
-        # Exclude private IPs (except Docker network)
-        # From going through the tunnel. Comment this line out
-        # To force ALL traffic through Wireguard tunnel.
-        exclude_private_addresses: yes
         # Uncomment the following line to allow specified private
         # subnet(s) through tunnel if exclude_private_addresses is defined.
         # Comma separate if specifying multiple subnets.
